@@ -4,6 +4,7 @@
  */
 'use strict';
 import React, {
+  NetInfo,
   AppRegistry,
   Component,
   StyleSheet,
@@ -11,24 +12,42 @@ import React, {
   View
 } from 'react-native';
 
-class transportationapp extends Component {
+const ConnectionInfo = React.createClass({
+  getInitialState(){
+      return {
+          connected: false
+      }
+  },
+  componentDidMount(){
+      NetInfo.addEventListener('change', ()=> {
+          this._handleConnectionStatus()
+      })
+  },
+  _handleConnectionStatus(connected){
+      this.setState({connected})
+  },
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
+      <View>
+        <Text>
+            {this.state.connected ? 'connected' : 'disconnected'}
         </Text>
       </View>
     );
   }
-}
+})
+
+
+
+const App = React.createClass({
+  render() {
+    return (
+      <View style={styles.container}>
+          <ConnectionInfo />
+      </View>
+    );
+  }
+})
 
 const styles = StyleSheet.create({
   container: {
@@ -49,4 +68,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('transportationapp', () => transportationapp);
+AppRegistry.registerComponent('transportationapp', () => App);
